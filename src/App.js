@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import * as RxDB from 'rxdb';
-import {QueryChangeDetector} from 'rxdb';
+//import {QueryChangeDetector} from 'rxdb';
 import { schema } from './Schema';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,11 +12,11 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import * as moment from 'moment';
 
-QueryChangeDetector.enable();
-QueryChangeDetector.enableDebugging();
+//RxDB.QueryChangeDetector.enable();
+//RxDB.QueryChangeDetector.enableDebugging();
 
-RxDB.plugin(require('pouchdb-adapter-idb'));
-RxDB.plugin(require('pouchdb-adapter-http'));
+RxDB.addRxPlugin(require('pouchdb-adapter-idb'));
+RxDB.addRxPlugin(require('pouchdb-adapter-http'));
 
 const syncURL = 'http://localhost:5984/';
 const dbName = 'chatdb';
@@ -35,8 +35,10 @@ class App extends Component {
 
   async createDatabase() {
     // password must have at least 8 characters
-    const db = await RxDB.create(
-      {name: dbName, adapter: 'idb', password: '12345678'}
+    const db = await RxDB.createRxDatabase(
+      {name: dbName, adapter: 'idb', password: '12345678',
+       queryChangeDetection: true // <- enable queryChangeDetection
+      }
     );
       console.dir(db);
 
